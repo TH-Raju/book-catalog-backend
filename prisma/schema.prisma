@@ -11,22 +11,84 @@ datasource db {
 }
 
 model User {
-  id String @id @default(uuid())
-  name String
-  email String @unique
-  password String
-  role Role
-  contactNo String
-  address String
-  profileImg String
-
+  id           String @id @default(uuid())
+  name         String
+  email        String @unique
+  password     String
+  role         Role
+  contactNo    String
+  address      String
+  profileImg   String
+  orders       Order[]
+  reviews      ReviewAndRating[]
 
   @@map("users")
 
+}
+model Book {
+  id              String    @id @default(uuid()) // You can also use UUID type instead of String if preferred
+  title           String
+  author          String
+  price           Float
+  genre           String
+  publicationDate String 
+  categoryId      String    // You can change the data type to UUID if preferred
+  category        Category  @relation(fields: [categoryId], references: [id])
+  orderedBooks    OrderedBook[]
+  reviews         ReviewAndRating[]
+   @@map("books")
+}
+model Category {
+  id      String  @id @default(uuid()) // You can also use UUID type instead of String if preferred
+  title   String
+  books   Book[]
+  @@map("categories")
+}
+
+
+model Order {
+  id            String    @id @default(uuid())
+  userId        String
+      
+  status        OrderStatus @default(pending)
+  createdAt     DateTime  @default(now())
+  user          User      @relation(fields: [userId], references: [id])
+  orderedBooks  OrderedBook[]
+  @@map("orders")
+ 
+}
+
+model OrderedBook  {
+  id            String    @id @default(uuid())
+  orderId       String 
+  bookId        String 
+  quantity      Int 
+  order         Order    @relation(fields: [orderId], references: [id])
+  book          Book     @relation(fields: [bookId], references: [id])
+ @@map("orderbooks")
+
+
+}
+
+model ReviewAndRating {
+  id      String   @id @default(uuid())
+  review  String
+ rating   Int
+  userId  String
+  bookId  String 
+  user    User     @relation(fields: [userId], references: [id])
+  book    Book     @relation(fields: [bookId], references: [id])
+  @@map("reviewratings")
 }
 
 
 enum Role {
   admin
   customer
+}
+
+enum OrderStatus {
+  pending
+  shipped
+  delivered
 }

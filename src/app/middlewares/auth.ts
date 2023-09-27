@@ -5,7 +5,6 @@ import config from '../../config';
 import ApiError from '../../errors/ApiError';
 import { jwthelper } from '../../helpers/jwtHelpers';
 
-
 const auth =
   (...requiredRoles: string[]) =>
   async (req: Request, res: Response, next: NextFunction) => {
