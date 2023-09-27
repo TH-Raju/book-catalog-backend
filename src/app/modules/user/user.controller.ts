@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import catchAsync from '../../../shared/catchAsync';
-import { userservice } from './user.service';
+import userservice from './user.service';
 
 const getalluser = catchAsync(async (req: Request, res: Response) => {
   const result = await userservice.getallUser();

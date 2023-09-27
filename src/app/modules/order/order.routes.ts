@@ -10,6 +10,12 @@ router.post(
   orderController.createAorder
 );
 router.get(
+  '/all-order',
+  auth(ENUM_USER_ROLE.ADMIN),
+  orderController.getSingleOrder
+);
+
+router.get(
   '/',
   auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.CUSTOMER),
   orderController.getSingleOrder

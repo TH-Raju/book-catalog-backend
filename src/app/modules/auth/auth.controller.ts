@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import config from '../../../config';
 import catchAsync from '../../../shared/catchAsync';
-import { authservices } from './auth.service';
+import authservices from './auth.service';
 
 const createauthUser = catchAsync(async (req: Request, res: Response) => {
   const result = await authservices.createAuthUser(req.body);

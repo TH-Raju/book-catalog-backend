@@ -1,37 +1,36 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { User } from '@prisma/client';
-import bcrypt from 'bcrypt';
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import httpStatus from 'http-status';
 import { Secret } from 'jsonwebtoken';
 import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
+
+import { User } from '@prisma/client';
+import bcrypt from 'bcrypt';
 import { jwthelper } from '../../../helpers/jwtHelpers';
 import prisma from '../../../shared/prisma';
 import { user } from './auth.interface';
 
 const createAuthUser = async (data: User): Promise<User | null> => {
-  const password = bcrypt.hash(
-      data?.password as string,
-      Number(config.bycrypt_salt_rounds)
+  const password = await bcrypt.hash(
+    data?.password,
+    Number(config.bycrypt_salt_rounds)
   );
   data.password = password;
   const result = await prisma.user.create({
     data,
-    select: {
-      id: true,
-      name: true,
-      email: true,
-      role: true,
-      contactNo: true,
-      address: true,
-      profileImg: true,
+    include: {
+      orders: true,
+      reviews: true,
     },
   });
+
   if (!result) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'something went wrong');
   }
+
   return result;
 };
+
 const loginuser = async (data: any): Promise<any> => {
   const { email, password } = data;
   const isUserExist = await prisma.user.findUnique({
@@ -43,9 +42,9 @@ const loginuser = async (data: any): Promise<any> => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'user not exist');
   }
 
-  const decriptedPassword = bcrypt.compare(
-      password,
-      isUserExist.password
+  const decriptedPassword = await bcrypt.compare(
+    password,
+    isUserExist.password
   );
 
   if (isUserExist?.password && !decriptedPassword) {
@@ -116,6 +115,8 @@ const refreshToken = async (token: string) => {
   };
 };
 
+// profile
+
 const getUserProfile = async (token: any): Promise<user | null> => {
   const { role, userId } = token;
   const result = await prisma.user.findUnique({
@@ -140,9 +141,10 @@ const getUserProfile = async (token: any): Promise<user | null> => {
   return result;
 };
 
-export const authservices = {
+const authservices = {
   createAuthUser,
   loginuser,
   refreshToken,
   getUserProfile,
 };
+export default authservices;
