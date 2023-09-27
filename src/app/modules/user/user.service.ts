@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { User } from '@prisma/client';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
@@ -13,7 +12,7 @@ const getallUser = async (): Promise<User[] | null> => {
       role: true,
       contactNo: true,
       address: true,
-      profileImg: true,
+      profileImg: true, // Include the profileImg field
     },
   });
   const usersWithoutPassword = result.map(user => {
@@ -27,6 +26,21 @@ const getallUser = async (): Promise<User[] | null> => {
   return usersWithoutPassword;
 };
 
+//   get single user
+const getSingleUser = async (id: string): Promise<User | null> => {
+  const result = await prisma.user.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      orders: true,
+      reviews: true,
+    },
+  });
+  return result;
+};
+
 export const userservice = {
   getallUser,
+  getSingleUser,
 };

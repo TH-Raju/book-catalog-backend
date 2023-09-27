@@ -10,13 +10,22 @@ import prisma from '../../../shared/prisma';
 import { user } from './auth.interface';
 
 const createAuthUser = async (data: User): Promise<User | null> => {
-  const password = await bcrypt.hash(
-    data?.password,
-    Number(config.bycrypt_salt_rounds)
+  const password = bcrypt.hash(
+      data?.password as string,
+      Number(config.bycrypt_salt_rounds)
   );
   data.password = password;
   const result = await prisma.user.create({
     data,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      contactNo: true,
+      address: true,
+      profileImg: true,
+    },
   });
   if (!result) {
     throw new ApiError(httpStatus.BAD_REQUEST, 'something went wrong');
@@ -34,9 +43,9 @@ const loginuser = async (data: any): Promise<any> => {
     throw new ApiError(httpStatus.BAD_REQUEST, 'user not exist');
   }
 
-  const decriptedPassword = await bcrypt.compare(
-    password,
-    isUserExist.password
+  const decriptedPassword = bcrypt.compare(
+      password,
+      isUserExist.password
   );
 
   if (isUserExist?.password && !decriptedPassword) {
@@ -72,41 +81,40 @@ const loginuser = async (data: any): Promise<any> => {
 };
 
 const refreshToken = async (token: string) => {
-    let verifyToken = null;
-    try {
-      verifyToken = jwthelper.verifyToken(
-        token,
-        config.jwt.refresh_secret as Secret
-      );
-    } catch (error) {
-      throw new ApiError(404, 'invalid token');
-    }
-    // step 2 cheek if user exists or not
-  
-    const isUserExist = await prisma.user.findUnique({
-      where: {
-        email: verifyToken?.email,
-      },
-    });
-    if (!isUserExist) {
-      throw new ApiError(httpStatus.BAD_REQUEST, 'user not exist');
-    }
-  
-    // const { email } = isUserExist
-  
-    // step 3 generate new token
-    const accessToken = jwthelper.createToken(
-      { id: isUserExist?.id, email: isUserExist?.email, role: isUserExist?.role },
-      config.jwt.secret as Secret,
-      {
-        expiresIn: config.jwt.expires_in,
-      }
+  let verifyToken = null;
+  try {
+    verifyToken = jwthelper.verifyToken(
+      token,
+      config.jwt.refresh_secret as Secret
     );
-    return {
-      accessToken,
-    };
-  };
+  } catch (error) {
+    throw new ApiError(404, 'invalid token');
+  }
+  // step 2 cheek if user exists or not
 
+  const isUserExist = await prisma.user.findUnique({
+    where: {
+      email: verifyToken?.email,
+    },
+  });
+  if (!isUserExist) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'user not exist');
+  }
+
+  // const { email } = isUserExist
+
+  // step 3 generate new token
+  const accessToken = jwthelper.createToken(
+    { id: isUserExist?.id, email: isUserExist?.email, role: isUserExist?.role },
+    config.jwt.secret as Secret,
+    {
+      expiresIn: config.jwt.expires_in,
+    }
+  );
+  return {
+    accessToken,
+  };
+};
 
 const getUserProfile = async (token: any): Promise<user | null> => {
   const { role, userId } = token;

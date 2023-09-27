@@ -12,6 +12,18 @@ const getalluser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// getsingle
+const getsingleuser = catchAsync(async (req: Request, res: Response) => {
+  const result = await userservice.getSingleUser(req.params.id);
+  res.send({
+    success: true,
+    statusCode: 200,
+    message: 'User retrieved  successfully',
+    data: result,
+  });
+});
+
 export const usercontroller = {
   getalluser,
+  getsingleuser,
 };
