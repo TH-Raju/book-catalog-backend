@@ -1,12 +1,17 @@
 import express from 'express';
 import { AuthRoute } from '../modules/auth/auth.routes';
 import profileRoutes from '../modules/auth/profile.route';
+import { userRoutes } from '../modules/user/user.routes';
 
 const router = express.Router();
 const moduleRoutes = [
   {
     path: '/auth',
     route: AuthRoute,
+  },
+  {
+    path: '/users',
+    route: userRoutes,
   },
   {
     path: '/profile',
