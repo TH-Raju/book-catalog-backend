@@ -33,8 +33,19 @@ const updateuser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const deleteuser = catchAsync(async (req: Request, res: Response) => {
+  const result = await userservice.deleteUser(req.params.id);
+  res.send({
+    success: true,
+    statusCode: 200,
+    message: 'User deleted   successfully',
+    data: result,
+  });
+});
+
 export const usercontroller = {
   getalluser,
   getsingleuser,
   updateuser,
+  deleteuser,
 };
