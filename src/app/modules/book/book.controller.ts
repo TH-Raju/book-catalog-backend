@@ -37,7 +37,29 @@ const getallbooks = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const getBooksByCategoryId = catchAsync(async (req: Request, res: Response) => {
+  const options = pick(req.query, [
+    'limit',
+    'page',
+    'skip',
+    'sortBy',
+    'sortOrder',
+  ]);
+  const result = await booksServices.getBooksByCategoryId(
+    req.params.categoryId,
+    options
+  );
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'books fetched successfully',
+    meta: result.meta,
+    data: result.data,
+  });
+});
+
 export const booksController = {
   createBooks,
   getallbooks,
+  getBooksByCategoryId,
 };

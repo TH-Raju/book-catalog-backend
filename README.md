@@ -13,4 +13,7 @@
 - /api/v1/books?category=[:id] (GET)
 - /api/v1/books?search=Programming (GET)
 
+- /api/v1/books/:categoryId/category (GET)
+- /api/v1/books/:id/category?limit=1&page=1 (GET)
+
 ### ORDER
