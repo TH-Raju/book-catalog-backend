@@ -1,4 +1,6 @@
 import { Category } from '@prisma/client';
+import httpStatus from 'http-status';
+import ApiError from '../../../errors/ApiError';
 import prisma from '../../../shared/prisma';
 
 // create category
@@ -9,6 +11,20 @@ const createCategory = async (data: Category): Promise<Category> => {
   return result;
 };
 
+const getallcateGories = async (): Promise<Category[] | null> => {
+  const result = await prisma.category.findMany({
+    include: {
+      books: true,
+    },
+  });
+
+  if (!result) {
+    throw new ApiError(httpStatus.BAD_REQUEST, 'something went wrong');
+  }
+  return result;
+};
+
 export const categoryServices = {
   createCategory,
+  getallcateGories,
 };
