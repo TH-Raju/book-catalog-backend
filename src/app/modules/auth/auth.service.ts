@@ -7,6 +7,7 @@ import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 import { jwthelper } from '../../../helpers/jwtHelpers';
 import prisma from '../../../shared/prisma';
+import { user } from './auth.interface';
 
 const createAuthUser = async (data: User): Promise<User | null> => {
   const password = await bcrypt.hash(
@@ -70,7 +71,70 @@ const loginuser = async (data: any): Promise<any> => {
   };
 };
 
+const refreshToken = async (token: string) => {
+    let verifyToken = null;
+    try {
+      verifyToken = jwthelper.verifyToken(
+        token,
+        config.jwt.refresh_secret as Secret
+      );
+    } catch (error) {
+      throw new ApiError(404, 'invalid token');
+    }
+    // step 2 cheek if user exists or not
+  
+    const isUserExist = await prisma.user.findUnique({
+      where: {
+        email: verifyToken?.email,
+      },
+    });
+    if (!isUserExist) {
+      throw new ApiError(httpStatus.BAD_REQUEST, 'user not exist');
+    }
+  
+    // const { email } = isUserExist
+  
+    // step 3 generate new token
+    const accessToken = jwthelper.createToken(
+      { id: isUserExist?.id, email: isUserExist?.email, role: isUserExist?.role },
+      config.jwt.secret as Secret,
+      {
+        expiresIn: config.jwt.expires_in,
+      }
+    );
+    return {
+      accessToken,
+    };
+  };
+
+
+const getUserProfile = async (token: any): Promise<user | null> => {
+  const { role, userId } = token;
+  const result = await prisma.user.findUnique({
+    where: {
+      id: userId,
+      role,
+    },
+
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      contactNo: true,
+      address: true,
+      profileImg: true,
+    },
+  });
+  if (!result) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'user not found');
+  }
+  return result;
+};
+
 export const authservices = {
   createAuthUser,
   loginuser,
+  refreshToken,
+  getUserProfile,
 };
