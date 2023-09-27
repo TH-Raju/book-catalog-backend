@@ -9,5 +9,10 @@ router.post(
   auth(ENUM_USER_ROLE.CUSTOMER),
   orderController.createAorder
 );
+router.get(
+  '/',
+  auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.CUSTOMER),
+  orderController.getSingleOrder
+);
 
 export const orderRoutes = router;
