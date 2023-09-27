@@ -147,10 +147,27 @@ const getsingleBook = async (id: string): Promise<Book | null> => {
   });
   return result;
 };
+//   update single books
+const updateSingleBook = async (
+  id: string,
+  data: Partial<Book>
+): Promise<Book | null> => {
+  const result = await prisma.book.update({
+    where: {
+      id,
+    },
+    include: {
+      category: true,
+    },
+    data,
+  });
+  return result;
+};
 
 export const booksServices = {
   createBooks,
   getallbooks,
   getBooksByCategoryId,
   getsingleBook,
+  updateSingleBook,
 };
