@@ -7,4 +7,5 @@ router.post('/create-category', categoryController.createCategory);
 router.get('/', categoryController.getallcateGories);
 router.get('/:id', categoryController.getsingleCategory);
 router.patch('/:id', categoryController.updateCategory);
+router.delete('/:id', categoryController.deleteCategory);
 export const categoryRoutes = router;
