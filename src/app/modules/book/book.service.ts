@@ -135,8 +135,22 @@ const getBooksByCategoryId = async (
   };
 };
 
+// get single book
+const getsingleBook = async (id: string): Promise<Book | null> => {
+  const result = await prisma.book.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      category: true,
+    },
+  });
+  return result;
+};
+
 export const booksServices = {
   createBooks,
   getallbooks,
   getBooksByCategoryId,
+  getsingleBook,
 };
