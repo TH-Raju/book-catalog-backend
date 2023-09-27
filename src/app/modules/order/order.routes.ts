@@ -21,4 +21,10 @@ router.get(
   orderController.getSingleOrder
 );
 
+router.get(
+    '/:id',
+    auth(ENUM_USER_ROLE.ADMIN, ENUM_USER_ROLE.CUSTOMER),
+    orderController.getspecificOrder
+  );
+
 export const orderRoutes = router;

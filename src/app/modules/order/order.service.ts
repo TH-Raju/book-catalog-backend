@@ -110,8 +110,53 @@ const getSingleOrder = async (token: any): Promise<Order | null> => {
   return result;
 };
 
+// bonus part get specific order
+const getspecificOrder = async (
+  id: string,
+  token: any
+): Promise<Order | null> => {
+  const { role, userId } = token;
+
+  let result: any;
+  if (role && role === 'admin') {
+    result = await prisma.order.findMany({
+      where: {
+        id,
+      },
+      include: {
+        orderedBooks: {
+          include: {
+            book: true,
+          },
+        },
+      },
+    });
+  } else if (role && role === 'customer') {
+    result = await prisma.order.findMany({
+      where: {
+        id,
+        userId: {
+          equals: userId,
+        },
+      },
+      include: {
+        orderedBooks: {
+          include: {
+            book: true,
+          },
+        },
+      },
+    });
+  }
+  if (!result || result.length === 0) {
+    throw new ApiError(httpStatus.NOT_FOUND, 'Order not found');
+  }
+  return result;
+};
+
 export const orderServices = {
   createOrder,
   getAllOrders,
   getSingleOrder,
+  getspecificOrder,
 };
