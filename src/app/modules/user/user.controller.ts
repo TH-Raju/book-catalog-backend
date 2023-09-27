@@ -23,7 +23,18 @@ const getsingleuser = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+const updateuser = catchAsync(async (req: Request, res: Response) => {
+  const result = await userservice.updateUser(req.params.id, req.body);
+  res.send({
+    success: true,
+    statusCode: 200,
+    message: 'User updated   successfully',
+    data: result,
+  });
+});
+
 export const usercontroller = {
   getalluser,
   getsingleuser,
+  updateuser,
 };

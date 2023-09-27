@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-unused-vars */
 import { User } from '@prisma/client';
 import httpStatus from 'http-status';
 import ApiError from '../../../errors/ApiError';
@@ -40,7 +42,26 @@ const getSingleUser = async (id: string): Promise<User | null> => {
   return result;
 };
 
+//   update
+const updateUser = async (
+  id: string,
+  data: Partial<User>
+): Promise<User | null> => {
+  const result = await prisma.user.update({
+    where: {
+      id,
+    },
+    include: {
+      orders: true,
+      reviews: true,
+    },
+    data,
+  });
+  return result;
+};
+
 export const userservice = {
   getallUser,
   getSingleUser,
+  updateUser,
 };
