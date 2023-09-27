@@ -164,10 +164,49 @@ const updateSingleBook = async (
   return result;
 };
 
+// delete
+const deleteBook = async (id: string): Promise<Book | null> => {
+  let deletedBook: Book | null = null;
+
+  await prisma.$transaction(async prismaClient => {
+    const ordersWithBook = await prismaClient.order.findMany({
+      where: {
+        orderedBooks: {
+          some: {
+            bookId: id,
+          },
+        },
+      },
+    });
+
+    await Promise.all(
+      ordersWithBook.map(async order => {
+        await prismaClient.orderedBook.deleteMany({
+          where: {
+            orderId: order.id,
+            bookId: id,
+          },
+        });
+      })
+    );
+    deletedBook = await prismaClient.book.delete({
+      where: {
+        id,
+      },
+      include: {
+        category: true,
+      },
+    });
+  });
+
+  return deletedBook;
+};
+
 export const booksServices = {
   createBooks,
   getallbooks,
   getBooksByCategoryId,
   getsingleBook,
   updateSingleBook,
+  deleteBook,
 };

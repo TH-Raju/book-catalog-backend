@@ -7,5 +7,6 @@ router.get('/', booksController.getallbooks);
 router.get('/:categoryId/category', booksController.getBooksByCategoryId);
 router.get('/:id', booksController.getsingleBook);
 router.patch('/:id', booksController.updateSingleBook);
+router.delete('/:id', booksController.deleteBook);
 
 export const booksRoutes = router;

@@ -79,10 +79,22 @@ const updateSingleBook = catchAsync(async (req: Request, res: Response) => {
   });
 });
 
+// delete
+const deleteBook = catchAsync(async (req: Request, res: Response) => {
+  const result = await booksServices.deleteBook(req.params.id);
+  res.send({
+    success: true,
+    statusCode: 200,
+    message: 'book deleted   successfully',
+    data: result,
+  });
+});
+
 export const booksController = {
   createBooks,
   getallbooks,
   getBooksByCategoryId,
   getsingleBook,
   updateSingleBook,
+  deleteBook,
 };
