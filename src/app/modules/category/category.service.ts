@@ -24,7 +24,21 @@ const getallcateGories = async (): Promise<Category[] | null> => {
   return result;
 };
 
+// get single user
+const getsingleCategory = async (id: string): Promise<Category | null> => {
+  const result = await prisma.category.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      books: true,
+    },
+  });
+  return result;
+};
+
 export const categoryServices = {
   createCategory,
   getallcateGories,
+  getsingleCategory,
 };
