@@ -12,11 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 const http_status_1 = __importDefault(require("http-status"));
-const config_1 = __importDefault(require("../../../config"));
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
+const config_1 = __importDefault(require("../../../config"));
 const jwtHelpers_1 = require("../../../helpers/jwtHelpers");
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
 const createAuthUser = (data) => __awaiter(void 0, void 0, void 0, function* () {
@@ -38,20 +39,28 @@ const loginuser = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, password } = data;
     const isUserExist = yield prisma_1.default.user.findUnique({
         where: {
-            email: email
-        }
+            email: email,
+        },
     });
     if (!isUserExist) {
-        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, "user not exist");
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'user not exist');
     }
     const decriptedPassword = yield bcrypt_1.default.compare(password, isUserExist.password);
     if ((isUserExist === null || isUserExist === void 0 ? void 0 : isUserExist.password) && !decriptedPassword) {
-        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, "password is incorrect");
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'password is incorrect');
     }
-    const accessToken = jwtHelpers_1.jwthelper.createToken({ userId: isUserExist === null || isUserExist === void 0 ? void 0 : isUserExist.id, email: isUserExist === null || isUserExist === void 0 ? void 0 : isUserExist.email, role: isUserExist === null || isUserExist === void 0 ? void 0 : isUserExist.role }, config_1.default.jwt.secret, {
+    const accessToken = jwtHelpers_1.jwthelper.createToken({
+        userId: isUserExist === null || isUserExist === void 0 ? void 0 : isUserExist.id,
+        email: isUserExist === null || isUserExist === void 0 ? void 0 : isUserExist.email,
+        role: isUserExist === null || isUserExist === void 0 ? void 0 : isUserExist.role,
+    }, config_1.default.jwt.secret, {
         expiresIn: process.env.JWT_EXPIRES_IN,
     });
-    const refreshToken = jwtHelpers_1.jwthelper.createToken({ userId: isUserExist === null || isUserExist === void 0 ? void 0 : isUserExist.id, email: isUserExist === null || isUserExist === void 0 ? void 0 : isUserExist.email, role: isUserExist === null || isUserExist === void 0 ? void 0 : isUserExist.role }, config_1.default.jwt.secret, {
+    const refreshToken = jwtHelpers_1.jwthelper.createToken({
+        userId: isUserExist === null || isUserExist === void 0 ? void 0 : isUserExist.id,
+        email: isUserExist === null || isUserExist === void 0 ? void 0 : isUserExist.email,
+        role: isUserExist === null || isUserExist === void 0 ? void 0 : isUserExist.role,
+    }, config_1.default.jwt.secret, {
         expiresIn: config_1.default.jwt.refresh_expires_in,
     });
     return {
@@ -70,11 +79,11 @@ const refreshToken = (token) => __awaiter(void 0, void 0, void 0, function* () {
     // step 2 cheek if user exists or not
     const isUserExist = yield prisma_1.default.user.findUnique({
         where: {
-            email: verifyToken === null || verifyToken === void 0 ? void 0 : verifyToken.email
-        }
+            email: verifyToken === null || verifyToken === void 0 ? void 0 : verifyToken.email,
+        },
     });
     if (!isUserExist) {
-        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, "user not exist");
+        throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'user not exist');
     }
     // const { email } = isUserExist
     // step 3 generate new token
@@ -91,7 +100,7 @@ const getUserProfile = (token) => __awaiter(void 0, void 0, void 0, function* ()
     const result = yield prisma_1.default.user.findUnique({
         where: {
             id: userId,
-            role
+            role,
         },
         select: {
             id: true,
@@ -100,11 +109,11 @@ const getUserProfile = (token) => __awaiter(void 0, void 0, void 0, function* ()
             role: true,
             contactNo: true,
             address: true,
-            profileImg: true
-        }
+            profileImg: true,
+        },
     });
     if (!result) {
-        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, "user not found");
+        throw new ApiError_1.default(http_status_1.default.NOT_FOUND, 'user not found');
     }
     return result;
 });
@@ -112,6 +121,6 @@ const authservices = {
     createAuthUser,
     loginuser,
     refreshToken,
-    getUserProfile
+    getUserProfile,
 };
 exports.default = authservices;

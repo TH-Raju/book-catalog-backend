@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 //create order
 import { Order } from '@prisma/client';
 import httpStatus from 'http-status';

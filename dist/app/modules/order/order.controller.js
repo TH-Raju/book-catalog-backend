@@ -12,11 +12,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.orderController = void 0;
 const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
-const order_service_1 = __importDefault(require("./order.service"));
+const order_service_1 = require("./order.service");
 const createAorder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     console.log(req.user);
-    const result = yield order_service_1.default.createOrder(req.user, req.body);
+    const result = yield order_service_1.orderServices.createOrder(req.user, req.body);
     res.send({
         success: true,
         statusCode: 200,
@@ -24,17 +25,17 @@ const createAorder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
         data: result,
     });
 }));
-// const getAllOrders  =  catchAsync(async(req:Request,res:Response)=>{
-//     const result  = await orderServices.getAllOrders()
-//     res.send({
-//         success: true,
-//         statusCode: 200,
-//         message: 'orders retrive  successfully',
-//         data: result,
-//       })
-// })
+const getAllOrders = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield order_service_1.orderServices.getAllOrders();
+    res.send({
+        success: true,
+        statusCode: 200,
+        message: 'orders retrive  successfully',
+        data: result,
+    });
+}));
 const getSingleOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield order_service_1.default.getSingleOrder(req.user);
+    const result = yield order_service_1.orderServices.getSingleOrder(req.user);
     res.send({
         success: true,
         statusCode: 200,
@@ -43,7 +44,7 @@ const getSingleOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
     });
 }));
 const getspecificOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield order_service_1.default.getspecificOrder(req.params.id, req.user);
+    const result = yield order_service_1.orderServices.getspecificOrder(req.params.id, req.user);
     res.send({
         success: true,
         statusCode: 200,
@@ -51,9 +52,9 @@ const getspecificOrder = (0, catchAsync_1.default)((req, res) => __awaiter(void 
         data: result,
     });
 }));
-const orderController = {
+exports.orderController = {
     createAorder,
+    getAllOrders,
+    getSingleOrder,
     getspecificOrder,
-    getSingleOrder
 };
-exports.default = orderController;

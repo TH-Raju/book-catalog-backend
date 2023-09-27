@@ -23,6 +23,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.authcontroller = void 0;
 const config_1 = __importDefault(require("../../../config"));
 const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const auth_service_1 = __importDefault(require("./auth.service"));
@@ -65,7 +66,6 @@ const refreshToken = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, v
         data: result,
     });
 }));
-// profile
 const getUserProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield auth_service_1.default.getUserProfile(req.user);
     res.send({
@@ -75,10 +75,9 @@ const getUserProfile = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
         data: result,
     });
 }));
-const authcontroller = {
+exports.authcontroller = {
     createauthUser,
     loginUser,
     refreshToken,
-    getUserProfile
+    getUserProfile,
 };
-exports.default = authcontroller;

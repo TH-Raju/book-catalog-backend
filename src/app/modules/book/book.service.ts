@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 //create book
 
 import { Book, Prisma } from '@prisma/client';

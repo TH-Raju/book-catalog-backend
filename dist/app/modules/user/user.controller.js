@@ -12,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.usercontroller = void 0;
 const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
 const user_service_1 = __importDefault(require("./user.service"));
 const getalluser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -23,7 +24,7 @@ const getalluser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result,
     });
 }));
-// getsingle 
+// getsingle
 const getsingleuser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_service_1.default.getSingleUser(req.params.id);
     res.send({
@@ -33,7 +34,6 @@ const getsingleuser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, 
         data: result,
     });
 }));
-// update
 const updateuser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_service_1.default.updateUser(req.params.id, req.body);
     res.send({
@@ -52,10 +52,9 @@ const deleteuser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
         data: result,
     });
 }));
-const usercontroller = {
+exports.usercontroller = {
     getalluser,
     getsingleuser,
     updateuser,
-    deleteuser
+    deleteuser,
 };
-exports.default = usercontroller;

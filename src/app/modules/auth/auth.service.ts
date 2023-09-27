@@ -1,18 +1,19 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import httpStatus from 'http-status';
 import { Secret } from 'jsonwebtoken';
-import config from '../../../config';
 import ApiError from '../../../errors/ApiError';
 
 import { User } from '@prisma/client';
 import bcrypt from 'bcrypt';
+import config from '../../../config';
 import { jwthelper } from '../../../helpers/jwtHelpers';
 import prisma from '../../../shared/prisma';
 import { user } from './auth.interface';
 
 const createAuthUser = async (data: User): Promise<User | null> => {
   const password = await bcrypt.hash(
-    data?.password,
+    data?.password as string,
     Number(config.bycrypt_salt_rounds)
   );
   data.password = password;
@@ -44,7 +45,7 @@ const loginuser = async (data: any): Promise<any> => {
 
   const decriptedPassword = await bcrypt.compare(
     password,
-    isUserExist.password
+    isUserExist.password as string
   );
 
   if (isUserExist?.password && !decriptedPassword) {

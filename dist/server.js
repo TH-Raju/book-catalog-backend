@@ -17,12 +17,12 @@ const config_1 = __importDefault(require("./config"));
 function bootstrap() {
     return __awaiter(this, void 0, void 0, function* () {
         const server = app_1.default.listen(config_1.default.port, () => {
-            console.log("server is running");
+            console.log(`server is running on ${config_1.default.port}`);
         });
         const exitHandler = () => {
             if (server) {
                 server.close(() => {
-                    console.log("server is closed");
+                    console.log('server is closed');
                 });
             }
             process.exit(1);

@@ -12,28 +12,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.categoryController = void 0;
 const catchAsync_1 = __importDefault(require("../../../shared/catchAsync"));
-const category_service_1 = __importDefault(require("./category.service"));
+const category_service_1 = require("./category.service");
 const createCategory = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield category_service_1.default.createCategory(req.body);
+    const result = yield category_service_1.categoryServices.createCategory(req.body);
     res.send({
         success: true,
         statusCode: 200,
-        message: "Category created successfully",
-        data: result
-    });
-}));
-const updateCategory = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield category_service_1.default.updateCategory(req.params.id, req.body);
-    res.send({
-        success: true,
-        statusCode: 200,
-        message: 'category updated   successfully',
+        message: 'Category created successfully',
         data: result,
     });
 }));
 const getallcateGories = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield category_service_1.default.getallcateGories();
+    const result = yield category_service_1.categoryServices.getallcateGories();
     res.send({
         success: true,
         statusCode: 200,
@@ -41,18 +33,28 @@ const getallcateGories = (0, catchAsync_1.default)((req, res) => __awaiter(void 
         data: result,
     });
 }));
-// getsingle 
+// getsingle
 const getsingleCategory = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield category_service_1.default.getsingleCategory(req.params.id);
+    const result = yield category_service_1.categoryServices.getsingleCategory(req.params.id);
     res.send({
         success: true,
         statusCode: 200,
-        message: 'category retrieved  successfully',
+        message: 'category fetched  successfully',
+        data: result,
+    });
+}));
+// update category
+const updateCategory = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield category_service_1.categoryServices.updateCategory(req.params.id, req.body);
+    res.send({
+        success: true,
+        statusCode: 200,
+        message: 'category updated   successfully',
         data: result,
     });
 }));
 const deleteCategory = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield category_service_1.default.deleteCategory(req.params.id);
+    const result = yield category_service_1.categoryServices.deleteCategory(req.params.id);
     res.send({
         success: true,
         statusCode: 200,
@@ -60,11 +62,10 @@ const deleteCategory = (0, catchAsync_1.default)((req, res) => __awaiter(void 0,
         data: result,
     });
 }));
-const categoryController = {
+exports.categoryController = {
     createCategory,
+    getallcateGories,
+    getsingleCategory,
     updateCategory,
     deleteCategory,
-    getsingleCategory,
-    getallcateGories
 };
-exports.default = categoryController;

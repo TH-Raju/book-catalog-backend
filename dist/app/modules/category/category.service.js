@@ -12,35 +12,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.categoryServices = void 0;
 const http_status_1 = __importDefault(require("http-status"));
 const ApiError_1 = __importDefault(require("../../../errors/ApiError"));
 const prisma_1 = __importDefault(require("../../../shared/prisma"));
-// create
+// create category
 const createCategory = (data) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.category.create({
-        data
+        data,
     });
     return result;
 });
-// update
-const updateCategory = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield prisma_1.default.category.update({
-        where: {
-            id
-        },
-        include: {
-            books: true
-        },
-        data
-    });
-    return result;
-});
-// get all
 const getallcateGories = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.category.findMany({
         include: {
-            books: true
-        }
+            books: true,
+        },
     });
     if (!result) {
         throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'something went wrong');
@@ -51,39 +38,50 @@ const getallcateGories = () => __awaiter(void 0, void 0, void 0, function* () {
 const getsingleCategory = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.category.findUnique({
         where: {
-            id
+            id,
         },
         include: {
-            books: true
-        }
+            books: true,
+        },
     });
     return result;
 });
-// delete
+// update
+const updateCategory = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield prisma_1.default.category.update({
+        where: {
+            id,
+        },
+        include: {
+            books: true,
+        },
+        data,
+    });
+    return result;
+});
 const deleteCategory = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
         yield tx.book.deleteMany({
             where: {
-                categoryId: id
-            }
+                categoryId: id,
+            },
         });
         const result = yield tx.category.delete({
             where: {
-                id
+                id,
             },
             include: {
-                books: true
-            }
+                books: true,
+            },
         });
         return result;
     }));
     return result;
 });
-const categoryServices = {
+exports.categoryServices = {
     createCategory,
-    updateCategory,
     getallcateGories,
     getsingleCategory,
+    updateCategory,
     deleteCategory
 };
-exports.default = categoryServices;

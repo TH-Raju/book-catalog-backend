@@ -20,24 +20,24 @@ const getallUser = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.user.findMany({
         include: {
             orders: true,
-            reviews: true
-        }
+            reviews: true,
+        },
     });
     if (!result) {
         throw new ApiError_1.default(http_status_1.default.BAD_REQUEST, 'something went wrong');
     }
     return result;
 });
-//   get single user 
+//   get single user
 const getSingleUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.user.findUnique({
         where: {
-            id
+            id,
         },
         include: {
             orders: true,
-            reviews: true
-        }
+            reviews: true,
+        },
     });
     return result;
 });
@@ -45,45 +45,45 @@ const getSingleUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
 const updateUser = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield prisma_1.default.user.update({
         where: {
-            id
+            id,
         },
         include: {
             orders: true,
-            reviews: true
+            reviews: true,
         },
-        data
+        data,
     });
     return result;
 });
-//   delete 
+//   delete
 const deleteUser = (id) => __awaiter(void 0, void 0, void 0, function* () {
     yield prisma_1.default.$transaction((tx) => __awaiter(void 0, void 0, void 0, function* () {
         const findOrder = yield tx.order.findMany({
             where: {
-                userId: id
-            }
+                userId: id,
+            },
         });
         yield Promise.all(findOrder.map((order) => __awaiter(void 0, void 0, void 0, function* () {
             yield tx.orderedBook.deleteMany({
                 where: {
-                    orderId: order === null || order === void 0 ? void 0 : order.id
-                }
+                    orderId: order === null || order === void 0 ? void 0 : order.id,
+                },
             });
         })));
         yield tx.order.deleteMany({
             where: {
-                userId: id
-            }
+                userId: id,
+            },
         });
     }));
     const result = yield prisma_1.default.user.delete({
         where: {
-            id
+            id,
         },
         include: {
             orders: true,
-            reviews: true
-        }
+            reviews: true,
+        },
     });
     return result;
 });
@@ -91,6 +91,6 @@ const userservice = {
     getallUser,
     getSingleUser,
     updateUser,
-    deleteUser
+    deleteUser,
 };
 exports.default = userservice;
