@@ -1,4 +1,27 @@
-## LIVE LINK: https://book-catalog-assignment-8-jeu7z0zag-th-raju.vercel.app
+## LIVE LINK: [Book-Catalog-Backend](https://book-catalog-assignment-8-9chzh3prc-th-raju.vercel.app/)
+
+## Technology Used -
+
+- Yarn
+- Typescript
+- Prisma
+- Postgre sql
+- vercel
+- railway
+
+## Features
+
+- **Authentication and Authorization**: Securely make profile using signup route and get accessToken. Then you are Authorized. and you can see your Information. also explore our Service
+
+- **Book Management**: Create, delete, and update book list. Admins can access user details using email and user ID or phone number.
+
+- **Category Management**: Browse available book categories and view individual categories.
+
+- **Order System**: Make and manage orders for books.
+
+- **Product Listings**: View a list of books available for sale, create new book listings, and view individual book details.
+
+# API Routes
 
 ### USER
 
@@ -50,3 +73,7 @@
 
         "bookId": "0f21509b-4bbd-4038-aa78-39c37f039d01",
         "bookId": "0f21509b-4bbd-4038-aa78-39c37f039d01",
+
+## License
+
+- This project is licensed under [TH-Raju](https://tofajjol-hosen-raju.web.app/).
