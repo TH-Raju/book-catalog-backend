@@ -17,7 +17,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/v1', router);
+const data = {
+  message: 'Server Running....yay!!',
+  auth: "If you are not authorized you can't find any data!!",
+};
 
+app.get('/', (req, res) => {
+  res.send(data);
+});
 
 //global error handler
 app.use(globalErrorHandler);
